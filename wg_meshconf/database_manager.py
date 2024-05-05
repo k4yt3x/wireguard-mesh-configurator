@@ -388,3 +388,12 @@ class DatabaseManager:
                     for key in PEER_OPTIONAL_ATTRIBUTES_LOCAL:
                         if local_peer.get(key) is not None:
                             config.write("{} = {}\n".format(key, local_peer[key]))
+
+    def rotatekeys(self):
+        database = self.read_database()
+
+        for peer in database["peers"]:
+            privatekey = self.wireguard.genkey()
+            database["peers"][peer]["PrivateKey"] = privatekey
+
+        self.write_database(database)

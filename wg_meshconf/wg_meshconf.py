@@ -130,6 +130,8 @@ def parse_arguments():
         default=pathlib.Path.cwd() / "output",
     )
 
+    rotatekeys = subparsers.add_parser("rotatekeys")
+
     return parser.parse_args()
 
 
@@ -191,6 +193,9 @@ def main():
 
     elif args.command == "genconfig":
         database_manager.genconfig(args.name, args.output)
+
+    elif args.command == "rotatekeys":
+        database_manager.rotatekeys()
 
     # if no commands are specified
     else:

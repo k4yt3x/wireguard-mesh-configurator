@@ -118,3 +118,6 @@ venv.bak/
 # IntelliJ IDEA
 .idea
 *.iml
+
+# wg-meshconf output
+output

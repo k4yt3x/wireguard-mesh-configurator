@@ -11,6 +11,7 @@ The WireGuard class implements some of wireguard-tools' cryptographic
 """
 
 import base64
+from typing import List, Dict, FrozenSet
 
 from cryptography.hazmat.primitives import serialization
 from cryptography.hazmat.primitives.asymmetric.x25519 import X25519PrivateKey
@@ -70,3 +71,13 @@ class WireGuard:
             str: generated PSK encoded as a base64 string
         """
         return WireGuard.genkey()
+
+    @staticmethod
+    def generatepresharedkeysdict(peers: List[str]) -> Dict[FrozenSet, str]:
+        presharedkeys_dict: Dict[FrozenSet, str] = {}
+        for local_peer in peers:
+            for remote_peer in peers:
+                if remote_peer != local_peer and frozenset([local_peer, remote_peer]) not in presharedkeys_dict:
+                    presharedkeys_dict[frozenset([local_peer, remote_peer])] = WireGuard.genpsk()
+
+        return presharedkeys_dict

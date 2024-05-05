@@ -129,6 +129,13 @@ def parse_arguments():
         type=pathlib.Path,
         default=pathlib.Path.cwd() / "output",
     )
+    genconfig.add_argument(
+        "-psk",
+        "--presharedkeys",
+        help="generate configuration with preshared keys",
+        action="store_true",
+        default=None,
+    )
 
     rotatekeys = subparsers.add_parser("rotatekeys")
 
@@ -192,7 +199,7 @@ def main():
         database_manager.showpeers(args.name, args.verbose)
 
     elif args.command == "genconfig":
-        database_manager.genconfig(args.name, args.output)
+        database_manager.genconfig(args.name, args.output, args.presharedkeys)
 
     elif args.command == "rotatekeys":
         database_manager.rotatekeys()

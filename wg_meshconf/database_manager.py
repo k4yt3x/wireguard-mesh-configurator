@@ -317,7 +317,7 @@ class DatabaseManager:
         # print the constructed table in console
         Console().print(table)
 
-    def genconfig(self, Name: str, output: pathlib.Path):
+    def genconfig(self, Name: str, output: pathlib.Path, presharedkeys: bool = False):
         database = self.read_database()
 
         # check if peer ID is specified
@@ -337,6 +337,10 @@ class DatabaseManager:
         elif not output.exists():
             print(f"Creating output directory: {output}", file=sys.stderr)
             output.mkdir(exist_ok=True)
+
+        # generate preshared key sets for all peers
+        if presharedkeys:
+            preshared_dict = WireGuard.generatepresharedkeysdict(peers)
 
         # for every peer in the database
         for peer in peers:
@@ -380,6 +384,10 @@ class DatabaseManager:
                         else:
                             allowed_ips = ", ".join(remote_peer["Address"])
                         config.write("AllowedIPs = {}\n".format(allowed_ips))
+
+                    if presharedkeys:
+                        if preshared_dict.get(frozenset([peer, p])) is not None:
+                            config.write("PresharedKey = {}\n".format(preshared_dict[frozenset([peer, p])]))
 
                     for key in PEER_OPTIONAL_ATTRIBUTES_REMOTE:
                         if remote_peer.get(key) is not None:

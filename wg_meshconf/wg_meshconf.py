@@ -136,6 +136,13 @@ def parse_arguments():
         action="store_true",
         default=None,
     )
+    genconfig.add_argument(
+        "-rk",
+        "--rotatekeys",
+        help="rotate keys for all peers",
+        action="store_true",
+        default=None,
+    )
 
     rotatekeys = subparsers.add_parser("rotatekeys")
 
@@ -144,7 +151,6 @@ def parse_arguments():
 
 # if the file is not being imported
 def main():
-
     args = parse_arguments()
 
     database_manager = DatabaseManager(args.database)
@@ -200,6 +206,8 @@ def main():
 
     elif args.command == "genconfig":
         database_manager.genconfig(args.name, args.output, args.presharedkeys)
+        if args.rotatekeys:
+            database_manager.rotatekeys()
 
     elif args.command == "rotatekeys":
         database_manager.rotatekeys()
